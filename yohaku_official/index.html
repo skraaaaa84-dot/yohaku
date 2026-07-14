@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="言葉を、静かに置く場所。短歌投稿サービス「余白」。">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <title>余白 — 言葉を、静かに置く場所。</title>
+</head>
+<body>
+  <div class="splash" id="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">余白</div>
+      <div class="splash-roman">Y O H A K U</div>
+      <div class="splash-tagline">言葉を、静かに置く場所。</div>
+    </div>
+  </div>
+
+  <div class="notice" id="notice">
+    <div>
+      <strong id="noticeTitle">お知らせ</strong>
+      <p id="noticeText"></p>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <button class="brand" data-page="home">
+      <span class="brand-mark"></span>
+      <b>余白</b>
+      <span id="season">— 夏</span>
+    </button>
+    <nav>
+      <button data-page="home">読む</button>
+      <button id="navDrift">漂う</button>
+      <button id="navJourney">ことばの旅</button>
+      <button data-page="write">詠む</button>
+      <button class="editorial-link" data-page="editorial">編集室より</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page active" id="page-home">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="kicker">JAPANESE POETRY ARCHIVE</div>
+          <h1>余白</h1>
+          <div class="roman">Y O H A K U</div>
+          <div class="hero-text" id="heroQuote"></div>
+          <div class="hero-note">THIRTY-ONE SYLLABLES, ONE SILENCE.</div>
+        </div>
+        <div class="hero-side">
+          <div class="glass">
+            <div class="vertical-poem" id="heroPoem"></div>
+            <div class="index">01</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="museum-intro reveal">
+        <div class="museum-intro-inner">
+          <div class="museum-label">THE FIRST ROOM</div>
+          <div class="museum-copy">
+            一首を読むことは、<br>
+            誰かの時間に<br>
+            <span>静かに触れる</span>こと。
+          </div>
+        </div>
+      </section>
+
+      <section class="today-gallery reveal">
+        <div class="section-head">
+          <div>
+            <span>TODAY'S POEM</span>
+            <h2>今日の一首</h2>
+          </div>
+          <small id="todayDate"></small>
+        </div>
+        <article class="today-stage" id="todayStage">
+          <div class="no">01</div>
+          <p id="todayPoem"></p>
+          <div class="plaque">
+            <span id="todayAuthor"></span>
+            <span id="todayMood"></span>
+          </div>
+        </article>
+        <button class="text-button" id="openToday">一首をひらく</button>
+      </section>
+
+      <section class="counter-section reveal">
+        <div>
+          <span>WORDS ARRIVED TODAY</span>
+          <strong>今日届いた言葉</strong>
+        </div>
+        <div class="counter" id="todayCount">0<small>首</small></div>
+      </section>
+
+      <section class="statement reveal">
+        <span>ABOUT THE SPACE</span>
+        <p>
+          <i>ここは、</i>
+          <i>うまく言えなかった気持ちを、</i>
+          <i><em>三十一音の余白</em>に</i>
+          <i>置くための場所。</i>
+        </p>
+      </section>
+
+      <section class="home-theme reveal">
+        <div>
+          <span>THIS WEEK'S THEME</span>
+          <h2>今週のお題</h2>
+        </div>
+        <strong id="homeTheme">「窓」</strong>
+        <div>
+          <p id="homeThemeNote"></p>
+          <button class="text-button" id="writeThemeButton">このお題で詠む</button>
+        </div>
+      </section>
+
+      <section class="bookmarks reveal" id="bookmarksSection" hidden>
+        <div class="section-head">
+          <div><span>BOOKMARKS</span><h2>挟んだ栞</h2></div>
+          <button class="text-button" id="toggleBookmarks">ひらく</button>
+        </div>
+        <div id="bookmarksList" class="bookmark-list"></div>
+      </section>
+
+      <section class="archive reveal">
+        <div class="section-head">
+          <div><span>NEW ARRIVALS</span><h2>届いた言葉</h2></div>
+          <small id="volume"></small>
+        </div>
+        <div id="poemList"></div>
+      </section>
+    </section>
+
+    <section class="page" id="page-write">
+      <section class="write-layout">
+        <div>
+          <h2>余白に置く。</h2>
+          <p>まだ誰にも読まれていない言葉を、<br>そのまま、ここへ。</p>
+        </div>
+        <div>
+          <div class="write-theme">
+            <span>今週のお題</span>
+            <strong id="writeTheme">「窓」</strong>
+            <small>お題を使わずに詠んでも大丈夫です。</small>
+          </div>
+          <form id="poemForm">
+            <label>ことば<textarea id="poemInput" maxlength="180" required></textarea></label>
+            <label>書き手<input id="nameInput" maxlength="20" placeholder="匿名でも可"></label>
+            <label>気配
+              <select id="moodInput">
+                <option>恋</option><option>夜</option><option>生活</option>
+                <option>秘密</option><option>季節</option><option>その他</option>
+              </select>
+            </label>
+            <button class="primary-button">余白に置く。</button>
+          </form>
+        </div>
+      </section>
+    </section>
+
+    <section class="page" id="page-detail">
+      <section class="detail-layout">
+        <div class="no" id="detailNo"></div>
+        <div>
+          <p class="detail-poem" id="detailPoem"></p>
+          <div class="detail-actions">
+            <button id="prevPoem">← 前へ</button>
+            <button id="nextPoem">次へ →</button>
+            <button data-page="home">本を閉じる</button>
+            <button id="echoButton">共鳴する</button>
+            <button id="bookmarkButton">栞を挟む</button>
+            <button id="cardButton">短歌カード</button>
+          </div>
+        </div>
+        <aside id="detailMeta"></aside>
+      </section>
+    </section>
+
+    <section class="page" id="page-author">
+      <section class="author-page">
+        <div id="authorCount" class="eyebrow"></div>
+        <h1 id="authorName"></h1>
+        <div id="authorWorks"></div>
+      </section>
+    </section>
+
+    <section class="page" id="page-editorial">
+      <section class="editorial-page">
+        <div class="kicker">FROM THE EDITORIAL ROOM</div>
+        <h1>編集室からの手紙</h1>
+        <small id="editorialDate"></small>
+        <article class="editorial-letter">
+          <span>LETTER</span>
+          <h2 id="editorialTitle"></h2>
+          <p id="editorialBody"></p>
+        </article>
+        <div class="editorial-grid">
+          <section>
+            <span>THIS WEEK'S THEME</span>
+            <h3>今週のお題</h3>
+            <strong id="editorialTheme"></strong>
+            <p id="editorialThemeNote"></p>
+            <button class="text-button" id="editorialWrite">このお題で詠む</button>
+          </section>
+          <section>
+            <span>EDITOR'S SELECTION</span>
+            <h3>編集室選</h3>
+            <p id="selectedPoem"></p>
+            <small id="selectedAuthor"></small>
+          </section>
+        </div>
+        <div class="editorial-closing" id="editorialClosing"></div>
+      </section>
+    </section>
+
+    <section class="page" id="page-drift">
+      <section class="immersive-room">
+        <button class="close-room" data-page="home">本を閉じる</button>
+        <div>
+          <span>DRIFTING WORDS</span>
+          <p id="driftPoem"></p>
+          <small id="driftAuthor"></small>
+          <button class="round-button" id="driftAgain">もう一首、漂う</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="page" id="page-journey">
+      <section class="immersive-room">
+        <button class="close-room" data-page="home">本を閉じる</button>
+        <div>
+          <span>A JOURNEY THROUGH WORDS</span>
+          <div id="journeyPath" class="journey-path"></div>
+          <p id="journeyPoem"></p>
+          <small id="journeyMeta"></small>
+          <div class="journey-actions">
+            <button id="journeyNext">次のことばへ</button>
+            <button id="journeyOpen">この一首をひらく</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <button class="mobile-cta" data-page="write">一首、詠む</button>
+
+  <footer>
+    <span>© 2026 YOH AKU</span>
+    <span>また、言葉を置きに来てください。</span>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

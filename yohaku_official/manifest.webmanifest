@@ -1,0 +1,17 @@
+{
+  "name": "余白",
+  "short_name": "余白",
+  "description": "言葉を、静かに置く場所。",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f4ef",
+  "theme_color": "#f5f4ef",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
