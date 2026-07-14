@@ -1,0 +1,1562 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ef">
+<meta name="description" content="言葉を、静かに置く場所。短歌投稿サイト「余白」。">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>余白 — 言葉を、静かに置く場所。</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Manrope:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap');
+:root{
+  --bg:#f5f4ef;--paper:#fbfaf7;--ink:#161616;--muted:#777871;--line:rgba(20,20,20,.12);
+  --accent:#7d9da8;--accent-soft:#dfe8ea;--shadow:0 28px 90px rgba(64,86,94,.13);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 12% 7%,rgba(255,255,255,.95),transparent 28%),
+    radial-gradient(circle at 90% 12%,rgba(185,210,220,.24),transparent 30%),
+    linear-gradient(180deg,#f8f7f2,#f1f3f1);
+  color:var(--ink);
+  font-family:'Manrope','Noto Sans JP',sans-serif;
+  overflow-x:hidden
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.app{min-height:100vh}
+.page{display:none}.page.active{display:block}
+.loader{
+  position:fixed;inset:0;z-index:500;display:grid;place-items:center;background:var(--bg);
+  transition:.45s ease
+}
+.loader.hide{opacity:0;visibility:hidden}
+.loader strong{display:block;font:500 58px 'Shippori Mincho';letter-spacing:.22em}
+.loader span{display:block;margin-top:10px;text-align:center;font:400 11px 'Cormorant Garamond';letter-spacing:.58em;color:#777}
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 34px;
+  background:linear-gradient(180deg,rgba(245,244,239,.92),rgba(245,244,239,0));
+  backdrop-filter:blur(4px)
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand b{font:500 17px 'Shippori Mincho';letter-spacing:.25em}
+.brand span{font:400 10px 'Shippori Mincho';color:var(--accent);letter-spacing:.15em}
+.nav{display:flex;gap:22px}
+.nav button{border:0;background:none;padding:0;font-size:9px;letter-spacing:.2em;color:#333}
+.hero{
+  min-height:100svh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;
+  position:relative;padding:106px 6vw 60px;overflow:hidden
+}
+.hero:after{
+  content:"31";position:absolute;right:-1vw;bottom:-12vh;
+  font:300 min(42vw,570px)/.8 'Cormorant Garamond';
+  color:rgba(125,157,168,.1);letter-spacing:-.08em
+}
+.kicker{display:flex;align-items:center;gap:14px;margin-bottom:34px;font-size:9px;letter-spacing:.34em;color:var(--accent)}
+.kicker:before{content:"";width:58px;height:1px;background:var(--accent)}
+.hero h1{margin:0;font:500 clamp(72px,13vw,180px)/.82 'Shippori Mincho';letter-spacing:.16em}
+.roman{margin-top:16px;font:400 18px 'Cormorant Garamond';letter-spacing:.68em;color:#555}
+.hero-copy{position:relative;z-index:2}
+.hero-text{margin:74px 0 0 14%;font:500 clamp(22px,2.3vw,37px)/2 'Shippori Mincho';letter-spacing:.08em}
+.hero-note{margin:38px 0 0 14%;font-size:9px;letter-spacing:.18em;color:#7f8583}
+.hero-side{min-height:580px;display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.glass{
+  width:min(360px,82%);aspect-ratio:3/4;position:relative;
+  border:1px solid rgba(255,255,255,.88);
+  background:linear-gradient(145deg,rgba(255,255,255,.66),rgba(216,228,231,.45));
+  box-shadow:var(--shadow);backdrop-filter:blur(24px);transform:rotate(2.5deg)
+}
+.glass:before{content:"";position:absolute;inset:22px;border:1px solid var(--line)}
+.vertical-poem{position:absolute;inset:44px;writing-mode:vertical-rl;font:500 21px/2.35 'Shippori Mincho';letter-spacing:.12em}
+.index{position:absolute;left:-36px;bottom:30px;font:400 72px 'Cormorant Garamond';color:var(--accent)}
+.section{max-width:1240px;margin:0 auto;padding:120px 6vw}
+.counter{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:34px 0}
+.counter small{display:block;color:var(--accent);font-size:9px;letter-spacing:.27em}
+.counter strong{display:block;margin-top:8px;font:500 30px 'Shippori Mincho';letter-spacing:.08em}
+.number{font:300 92px 'Cormorant Garamond';color:var(--accent)}
+.number span{font-size:18px;color:#777;margin-left:8px}
+.statement{display:grid;grid-template-columns:.7fr 1.3fr;gap:9vw}
+.statement small{color:var(--accent);font-size:9px;letter-spacing:.28em}
+.statement p{margin:0;font:500 clamp(29px,4vw,57px)/1.65 'Shippori Mincho'}
+.statement em{font-style:normal;color:var(--accent)}
+.archive-head{display:flex;justify-content:space-between;align-items:end;padding-bottom:22px;border-bottom:1px solid #111}
+.archive-head h2{margin:0;font:400 72px 'Cormorant Garamond'}
+.archive-head span{font-size:9px;letter-spacing:.25em;color:#777}
+.poem-row{display:grid;grid-template-columns:90px 1fr 190px;gap:30px;padding:64px 0;border-bottom:1px solid var(--line);transition:.3s}
+.poem-row:hover{padding-left:16px;background:rgba(255,255,255,.28)}
+.no{font:400 32px 'Cormorant Garamond';color:var(--accent)}
+.poem-text{margin:0;white-space:pre-line;cursor:pointer;font:500 clamp(24px,3vw,41px)/1.95 'Shippori Mincho';letter-spacing:.08em}
+.meta{display:flex;flex-direction:column;gap:15px;font-size:9px;letter-spacing:.18em;color:#777}
+.meta button{border:0;background:none;padding:0;text-align:left;letter-spacing:.18em}
+.empty{text-align:center;padding:110px 0;border-bottom:1px solid var(--line)}
+.empty strong{font:500 31px 'Shippori Mincho'}
+.empty p{font:400 14px/2.1 'Shippori Mincho';color:#777}
+.outline{border:1px solid #111;background:none;padding:15px 28px;font-size:10px;letter-spacing:.2em}
+.interlude{min-height:430px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(circle,rgba(185,210,220,.6),rgba(223,232,234,.28) 40%,transparent 76%)}
+.interlude:before{content:"漂";position:absolute;font:500 360px 'Shippori Mincho';color:rgba(255,255,255,.42)}
+.interlude>div{position:relative;text-align:center}
+.interlude h3{font:500 42px 'Shippori Mincho';letter-spacing:.15em}
+.round{width:112px;height:112px;border-radius:50%;border:1px solid #657e87;background:rgba(255,255,255,.25);letter-spacing:.2em}
+.write-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px}
+.write-grid h2{margin:0;font:500 56px 'Shippori Mincho';letter-spacing:.08em;white-space:nowrap}
+.write-grid p{font:400 13px/2.1 'Shippori Mincho';color:#777}
+.form{border-top:1px solid #111}
+.field{padding:22px 0;border-bottom:1px solid var(--line)}
+.field label{display:block;font:400 10px 'Shippori Mincho';letter-spacing:.18em;color:#777;margin-bottom:11px}
+.field textarea,.field input,.field select{width:100%;border:0;background:none;outline:0;font:500 19px 'Shippori Mincho'}
+.field textarea{min-height:170px;line-height:1.9}
+.publish{margin-top:28px;border:1px solid #111;background:none;padding:17px 30px;font:500 12px 'Shippori Mincho';letter-spacing:.18em}
+.detail{min-height:100vh;padding:130px 8vw 80px;display:grid;grid-template-columns:120px 1fr 220px;gap:40px;align-items:center}
+.detail-poem{white-space:pre-line;font:500 clamp(32px,5vw,68px)/1.75 'Shippori Mincho';letter-spacing:.09em}
+.detail-side{font-size:10px;line-height:2.2;letter-spacing:.18em;color:#666}
+.detail-nav{display:flex;gap:12px;margin-top:28px}
+.detail-nav button{border:1px solid var(--line);background:none;padding:12px 16px}
+.author-page,.editorial-page{max-width:900px;margin:auto;padding:140px 6vw 100px}
+.author-page h1,.editorial-page h1{font:500 clamp(48px,8vw,88px) 'Shippori Mincho';letter-spacing:.1em}
+.author-count{color:var(--accent);letter-spacing:.18em;font-size:10px}
+.letter{margin-top:60px;font:400 18px/2.3 'Shippori Mincho';color:#4f4f4b}
+.author-list{margin-top:70px}
+.card-maker{margin-top:50px;padding:34px;border:1px solid var(--line);background:rgba(255,255,255,.32)}
+.card-preview{aspect-ratio:4/5;max-width:380px;margin:auto;background:#fff;padding:42px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
+.card-preview .cp{white-space:pre-line;font:500 23px/2 'Shippori Mincho'}
+.card-preview small{letter-spacing:.18em;color:#777}
+.success{position:fixed;inset:0;z-index:400;display:grid;place-items:center;background:rgba(245,244,239,.97);opacity:0;visibility:hidden;transition:.4s}
+.success.show{opacity:1;visibility:visible}
+.success strong{font:500 44px 'Shippori Mincho';letter-spacing:.1em}
+.success p{font:400 18px/2 'Shippori Mincho';color:#666;text-align:center}
+footer{display:flex;justify-content:space-between;padding:34px 6vw;border-top:1px solid var(--line);font-size:8px;letter-spacing:.2em;color:#777}
+@media(max-width:820px){
+ .topbar{padding:18px}.nav{gap:13px}.nav button:nth-child(4){display:none}
+ .hero{grid-template-columns:1fr;padding:100px 24px 72px}.hero-text,.hero-note{margin-left:0}.hero-side{min-height:420px}.glass{width:270px}
+ .section{padding:90px 24px}.statement,.write-grid{grid-template-columns:1fr;gap:38px}.archive-head h2{font-size:50px}
+ .poem-row{grid-template-columns:48px 1fr;gap:18px}.meta{grid-column:2}
+ .detail{grid-template-columns:1fr;padding:120px 24px 70px}.detail .no{display:none}
+ .write-grid h2{font-size:38px}.number{font-size:68px}footer{flex-direction:column;gap:10px}
+}
+
+/* ===== Museum Update ===== */
+:root{
+  --museum-paper:#f7f5ef;
+  --museum-white:#fffdf8;
+  --museum-ink:#171816;
+  --museum-mist:#dfe7e5;
+  --museum-leaf:#8da096;
+}
+body{
+  background:
+    radial-gradient(circle at 12% 7%,rgba(255,255,255,.98),transparent 26%),
+    radial-gradient(circle at 88% 10%,rgba(222,231,229,.42),transparent 30%),
+    linear-gradient(180deg,#f9f8f4 0%,#f2f3ef 100%);
+}
+body.night{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(116,143,159,.18),transparent 28%),
+    linear-gradient(180deg,#eef1f1 0%,#e8ecec 100%);
+}
+.topbar{
+  padding:24px 5vw;
+  background:linear-gradient(180deg,rgba(247,245,239,.92),rgba(247,245,239,0));
+}
+.brand b{
+  font-size:18px;
+  letter-spacing:.32em;
+}
+.hero{
+  min-height:100svh;
+  padding:120px 7vw 80px;
+  grid-template-columns:1fr 1fr;
+}
+.hero-copy{
+  max-width:780px;
+}
+.hero h1{
+  font-size:clamp(86px,15vw,210px);
+  line-height:.78;
+  letter-spacing:.17em;
+}
+.roman{
+  letter-spacing:.92em;
+  margin-top:24px;
+}
+.hero-text{
+  margin:100px 0 0 8%;
+  max-width:640px;
+}
+.hero-note{
+  margin-left:8%;
+}
+.hero-side{
+  min-height:620px;
+}
+.glass{
+  width:min(390px,80%);
+  background:
+    linear-gradient(150deg,rgba(255,255,255,.78),rgba(221,230,228,.44));
+  border:1px solid rgba(255,255,255,.94);
+  box-shadow:
+    0 40px 120px rgba(70,90,96,.12),
+    inset 0 0 0 1px rgba(255,255,255,.28);
+}
+.glass::after{
+  content:"TODAY'S POEM";
+  position:absolute;
+  left:-18px;
+  top:24px;
+  writing-mode:vertical-rl;
+  font:400 9px 'Manrope',sans-serif;
+  letter-spacing:.32em;
+  color:var(--accent);
+}
+.section{
+  max-width:1320px;
+  padding-left:7vw;
+  padding-right:7vw;
+}
+.counter{
+  padding:42px 0;
+}
+.statement{
+  padding-top:150px;
+  padding-bottom:170px;
+}
+.archive-head h2{
+  font-size:clamp(58px,7vw,96px);
+  letter-spacing:.01em;
+}
+.poem-row{
+  grid-template-columns:84px minmax(0,1fr) 210px;
+  padding:86px 0;
+  gap:40px;
+}
+.poem-row:hover{
+  padding-left:24px;
+  background:linear-gradient(90deg,rgba(255,255,255,.42),rgba(255,255,255,0));
+}
+.poem-text{
+  line-height:2.05;
+  max-width:760px;
+}
+.meta{
+  gap:18px;
+  padding-top:8px;
+}
+.meta button{
+  transition:.25s;
+}
+.meta button:hover{
+  color:var(--accent);
+}
+.interlude{
+  margin:0 4vw 150px;
+  border-radius:2px;
+  min-height:520px;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(199,216,214,.74),rgba(226,233,231,.42) 38%,rgba(247,245,239,0) 73%);
+}
+.interlude:before{
+  font-size:420px;
+}
+.write-grid{
+  min-height:calc(100svh - 120px);
+  align-items:start;
+  padding-top:170px;
+}
+.write-grid > div:first-child{
+  position:sticky;
+  top:140px;
+}
+.form{
+  background:rgba(255,255,255,.54);
+  border:1px solid rgba(255,255,255,.9);
+  padding:38px 42px;
+  box-shadow:0 28px 90px rgba(70,90,96,.08);
+}
+.field{
+  padding:26px 0;
+}
+.field textarea{
+  min-height:250px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 37px,
+      rgba(125,157,168,.12) 38px
+    );
+  line-height:38px;
+}
+.publish{
+  margin-top:36px;
+  min-width:190px;
+  transition:.3s;
+}
+.publish:hover{
+  background:#171816;
+  color:#fff;
+}
+.detail{
+  min-height:100svh;
+  padding-top:150px;
+  background:
+    radial-gradient(circle at 82% 18%,rgba(220,230,228,.42),transparent 32%);
+}
+.detail-poem{
+  max-width:820px;
+}
+.card-maker{
+  background:transparent;
+  border:none;
+  padding:40px 0 0;
+}
+.card-preview{
+  position:relative;
+  overflow:hidden;
+}
+.card-preview:after{
+  content:"31";
+  position:absolute;
+  right:-16px;
+  bottom:-50px;
+  font:300 150px 'Cormorant Garamond',serif;
+  color:rgba(125,157,168,.08);
+}
+.empty{
+  padding:140px 0;
+}
+.museum-intro{
+  max-width:1320px;
+  margin:0 auto;
+  padding:0 7vw 160px;
+}
+.museum-intro-inner{
+  min-height:560px;
+  display:grid;
+  grid-template-columns:.7fr 1.3fr;
+  gap:8vw;
+  align-items:center;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.museum-intro-label{
+  font-size:9px;
+  color:var(--accent);
+  letter-spacing:.3em;
+}
+.museum-intro-copy{
+  font:500 clamp(30px,4.4vw,62px)/1.7 'Shippori Mincho',serif;
+  letter-spacing:.04em;
+}
+.museum-intro-copy span{
+  color:var(--accent);
+}
+.soft-line{
+  width:1px;
+  height:84px;
+  background:linear-gradient(var(--accent),transparent);
+  margin:58px auto 0;
+}
+.reveal-museum{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .85s ease,transform .85s ease;
+}
+.reveal-museum.visible{
+  opacity:1;
+  transform:none;
+}
+@media(max-width:820px){
+  .hero{
+    grid-template-columns:1fr;
+    padding:110px 24px 74px;
+  }
+  .hero h1{
+    font-size:76px;
+  }
+  .hero-text,.hero-note{
+    margin-left:0;
+  }
+  .hero-side{
+    min-height:470px;
+  }
+  .section{
+    padding-left:24px;
+    padding-right:24px;
+  }
+  .museum-intro{
+    padding:0 24px 100px;
+  }
+  .museum-intro-inner{
+    grid-template-columns:1fr;
+    gap:28px;
+    min-height:auto;
+    padding:80px 0;
+  }
+  .poem-row{
+    padding:58px 0;
+  }
+  .write-grid{
+    min-height:auto;
+    padding-top:120px;
+  }
+  .write-grid > div:first-child{
+    position:static;
+  }
+  .form{
+    padding:26px 22px;
+  }
+  .interlude{
+    margin-inline:16px;
+  }
+}
+
+
+.loader{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.page{min-height:1px}
+
+/* ===== Safe opening splash ===== */
+.splash-screen{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:grid;
+  place-items:center;
+  background:#f7f5ef;
+  animation:splashOut 2.9s cubic-bezier(.4,0,.2,1) forwards;
+  pointer-events:none;
+}
+.splash-inner{
+  text-align:center;
+  animation:splashMark 2.55s cubic-bezier(.4,0,.2,1) both;
+}
+.splash-logo{
+  font:500 clamp(58px,10vw,96px)/1 'Shippori Mincho',serif;
+  letter-spacing:.22em;
+  text-indent:.22em;
+}
+.splash-roman{
+  margin-top:15px;
+  font:400 11px 'Cormorant Garamond',serif;
+  letter-spacing:.62em;
+  color:#777;
+  text-indent:.62em;
+}
+.splash-tagline{
+  margin-top:34px;
+  font:400 14px/1.8 'Shippori Mincho',serif;
+  letter-spacing:.12em;
+  color:#686a66;
+}
+@keyframes splashMark{
+  0%{opacity:0;transform:translateY(10px)}
+  18%{opacity:1;transform:none}
+  72%{opacity:1;transform:none}
+  100%{opacity:0;transform:translateY(-5px)}
+}
+@keyframes splashOut{
+  0%,78%{opacity:1;visibility:visible}
+  100%{opacity:0;visibility:hidden}
+}
+
+/* ===== Line-break refinement ===== */
+.hero-text{
+  max-width:720px;
+  text-wrap:balance;
+}
+.statement p,
+.museum-intro-copy,
+.write-grid h2,
+.write-grid p,
+.empty strong,
+.empty p,
+.interlude h3{
+  text-wrap:balance;
+}
+.write-grid h2{
+  white-space:nowrap;
+}
+.poem-text{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+@media(max-width:820px){
+  .hero-text{
+    font-size:clamp(21px,6.3vw,30px);
+    line-height:1.9;
+    letter-spacing:.045em;
+  }
+  .statement p{
+    font-size:clamp(27px,8vw,42px);
+    line-height:1.65;
+  }
+  .museum-intro-copy{
+    font-size:clamp(26px,7vw,38px);
+    line-height:1.7;
+  }
+  .write-grid h2{
+    font-size:36px;
+    line-height:1.15;
+    white-space:nowrap;
+  }
+  .write-grid p{
+    font-size:14px;
+    line-height:2;
+  }
+  .archive-head h2{
+    font-size:46px;
+    white-space:nowrap;
+  }
+}
+@media(max-width:390px){
+  .write-grid h2{font-size:32px}
+  .archive-head h2{font-size:41px}
+  .hero h1{font-size:68px}
+}
+
+
+/* ===== Meaningful line breaks ===== */
+.museum-intro-copy{
+  max-width:780px;
+  font-size:clamp(34px,4vw,58px);
+  line-height:1.82;
+}
+.statement p{
+  max-width:850px;
+  font-size:clamp(32px,3.75vw,54px);
+  line-height:1.78;
+}
+.statement em{
+  white-space:nowrap;
+}
+@media(max-width:820px){
+  .museum-intro-copy{
+    font-size:clamp(28px,7.2vw,38px);
+    line-height:1.78;
+  }
+  .statement p{
+    font-size:clamp(27px,7.2vw,39px);
+    line-height:1.72;
+  }
+  .splash-tagline{
+    margin-top:28px;
+    font-size:13px;
+  }
+}
+
+
+/* ===== Statement line-break fix ===== */
+.statement p{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.statement-line{
+  display:block;
+}
+.statement-line.nowrap{
+  white-space:nowrap;
+}
+@media(max-width:820px){
+  .statement-line.nowrap{
+    white-space:normal;
+  }
+  .statement p{
+    max-width:100%;
+  }
+}
+
+
+/* ===== Final experience update ===== */
+.brand-mark{
+  width:16px;
+  height:16px;
+  border:1px solid rgba(22,22,22,.45);
+  display:inline-block;
+  position:relative;
+  margin-right:2px;
+}
+.brand-mark::after{
+  content:"";
+  position:absolute;
+  width:6px;
+  height:6px;
+  right:-3px;
+  bottom:-3px;
+  background:var(--accent);
+  opacity:.72;
+}
+.splash-screen{
+  background:
+    radial-gradient(circle at 50% 46%,rgba(255,255,255,.9),transparent 22%),
+    linear-gradient(180deg,#f8f7f2,#f3f4f0);
+}
+.splash-glow{
+  width:1px;
+  height:72px;
+  margin:34px auto 0;
+  background:linear-gradient(var(--accent),transparent);
+  opacity:.62;
+}
+.today-gallery{
+  max-width:1320px;
+  margin:0 auto;
+  padding:150px 7vw 170px;
+}
+.today-gallery-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--line);
+}
+.today-label{
+  font-size:9px;
+  letter-spacing:.32em;
+  color:var(--accent);
+}
+.today-gallery h2{
+  margin:15px 0 0;
+  font:500 clamp(40px,5vw,68px)/1.2 'Shippori Mincho',serif;
+  letter-spacing:.08em;
+}
+.today-date{
+  font:400 12px 'Cormorant Garamond',serif;
+  letter-spacing:.18em;
+  color:#777;
+}
+.today-stage{
+  min-height:620px;
+  display:grid;
+  grid-template-columns:90px minmax(0,1fr) 180px;
+  gap:38px;
+  align-items:center;
+  cursor:pointer;
+  position:relative;
+}
+.today-stage::before{
+  content:"";
+  position:absolute;
+  inset:70px 0;
+  background:
+    radial-gradient(circle at 52% 45%,rgba(255,255,255,.9),rgba(255,255,255,.25) 46%,transparent 74%);
+  z-index:-1;
+}
+.today-number{
+  align-self:start;
+  margin-top:110px;
+  font:300 54px 'Cormorant Garamond',serif;
+  color:var(--accent);
+}
+.today-poem{
+  margin:0;
+  white-space:pre-line;
+  font:500 clamp(34px,4.7vw,66px)/1.86 'Shippori Mincho',serif;
+  letter-spacing:.085em;
+  max-width:840px;
+}
+.today-plaque{
+  align-self:end;
+  margin-bottom:110px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  font-size:9px;
+  letter-spacing:.19em;
+  color:#777;
+}
+.today-open{
+  display:block;
+  margin-left:auto;
+  border:0;
+  border-bottom:1px solid #222;
+  background:none;
+  padding:10px 0;
+  font:400 11px 'Shippori Mincho',serif;
+  letter-spacing:.18em;
+}
+.drift-room{
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  padding:100px 8vw 70px;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 46%,rgba(210,224,224,.6),rgba(246,245,240,.7) 45%,#f5f4ef 80%);
+}
+.drift-close{
+  position:absolute;
+  top:110px;
+  right:6vw;
+  border:0;
+  background:none;
+  font-size:10px;
+  letter-spacing:.2em;
+}
+.drift-room-inner{
+  width:min(880px,100%);
+  text-align:center;
+}
+.drift-kicker{
+  margin-bottom:54px;
+  font-size:9px;
+  letter-spacing:.34em;
+  color:var(--accent);
+}
+.drift-poem{
+  margin:0 auto;
+  white-space:pre-line;
+  font:500 clamp(34px,5vw,68px)/1.9 'Shippori Mincho',serif;
+  letter-spacing:.09em;
+}
+.drift-author{
+  margin-top:48px;
+  font-size:10px;
+  letter-spacing:.2em;
+  color:#777;
+}
+.drift-next{
+  margin-top:64px;
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  border:1px solid rgba(80,105,112,.55);
+  background:rgba(255,255,255,.25);
+  font:400 11px/1.7 'Shippori Mincho',serif;
+  letter-spacing:.12em;
+  transition:.3s;
+}
+.drift-next:hover{
+  background:#647e86;
+  color:#fff;
+  transform:rotate(5deg);
+}
+@media(max-width:820px){
+  .brand-mark{
+    width:14px;
+    height:14px;
+  }
+  .today-gallery{
+    padding:110px 24px 120px;
+  }
+  .today-stage{
+    min-height:540px;
+    grid-template-columns:42px 1fr;
+    gap:16px;
+  }
+  .today-number{
+    margin-top:84px;
+    font-size:40px;
+  }
+  .today-poem{
+    font-size:clamp(29px,8vw,42px);
+    line-height:1.78;
+  }
+  .today-plaque{
+    grid-column:2;
+    margin:0 0 60px;
+  }
+  .today-date{
+    display:none;
+  }
+  .drift-room{
+    padding:120px 24px 60px;
+  }
+  .drift-close{
+    top:92px;
+    right:24px;
+  }
+  .drift-poem{
+    font-size:clamp(30px,8vw,44px);
+    line-height:1.82;
+  }
+  .drift-next{
+    width:128px;
+    height:128px;
+  }
+}
+
+
+/* ===== Editorial Room ===== */
+.editorial-page{max-width:1120px;margin:auto;padding:150px 6vw 130px}
+.editorial-hero{padding-bottom:70px;border-bottom:1px solid var(--line)}
+.editorial-hero h1{margin:0;font:500 clamp(48px,8vw,92px)/1.25 'Shippori Mincho',serif;letter-spacing:.08em}
+.editorial-letter{max-width:820px;padding:110px 0 120px}
+.editorial-eyebrow{font-size:9px;letter-spacing:.3em;color:var(--accent);margin-bottom:22px}
+.editorial-letter h2{margin:0;font:500 clamp(30px,4.2vw,54px)/1.65 'Shippori Mincho',serif;letter-spacing:.05em}
+.editorial-letter .letter{margin-top:44px;font-size:17px;line-height:2.25}
+.editorial-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.editorial-topic,.editorial-selection{min-height:440px;padding:48px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.92);box-shadow:0 24px 70px rgba(70,90,96,.08);display:flex;flex-direction:column}
+.editorial-topic>span,.editorial-selection>span{font:400 13px 'Shippori Mincho',serif;letter-spacing:.15em;color:#777}
+.editorial-topic strong{margin-top:44px;font:500 clamp(42px,6vw,70px) 'Shippori Mincho',serif;letter-spacing:.12em}
+.editorial-topic p{margin-top:34px;font:400 14px/2 'Shippori Mincho',serif;color:#666}
+.editorial-topic button{margin-top:auto;align-self:flex-start;border:0;border-bottom:1px solid #222;background:none;padding:10px 0;font:400 11px 'Shippori Mincho',serif;letter-spacing:.16em}
+.editorial-selection p{margin:auto 0 30px;white-space:pre-line;font:500 clamp(25px,3.4vw,42px)/1.95 'Shippori Mincho',serif;letter-spacing:.07em}
+.editorial-selection small{font-size:10px;letter-spacing:.18em;color:#777}
+.editorial-closing{margin:130px auto 20px;text-align:center;font:500 clamp(23px,3vw,36px)/2 'Shippori Mincho',serif;letter-spacing:.07em}
+.write-theme{grid-column:2;padding:24px 0 8px;display:flex;align-items:baseline;gap:18px;border-top:1px solid var(--line)}
+.write-theme span,.write-theme small{font:400 10px 'Shippori Mincho',serif;letter-spacing:.14em;color:#777}
+.write-theme strong{font:500 28px 'Shippori Mincho',serif;letter-spacing:.1em}
+@media(max-width:820px){
+  .editorial-page{padding:120px 24px 100px}
+  .editorial-grid{grid-template-columns:1fr}
+  .editorial-topic,.editorial-selection{min-height:380px;padding:34px 28px}
+  .write-theme{grid-column:1;flex-wrap:wrap;gap:10px 16px}
+  .write-theme small{width:100%}
+}
+
+
+/* ===== Editorial discoverability update ===== */
+.editorial-title-line{
+  display:block;
+}
+.editorial-letter h2{
+  max-width:900px;
+  text-wrap:balance;
+}
+.editorial-selection p{
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
+.editorial-nav{
+  position:relative;
+  color:var(--accent)!important;
+}
+.editorial-nav::before{
+  content:"";
+  position:absolute;
+  left:-10px;
+  top:50%;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:var(--accent);
+  transform:translateY(-50%);
+}
+.home-theme{
+  max-width:1320px;
+  margin:0 auto;
+  padding:10px 7vw 150px;
+}
+.home-theme-inner{
+  display:grid;
+  grid-template-columns:.7fr .8fr 1fr;
+  gap:50px;
+  align-items:end;
+  padding:58px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.home-theme-kicker{
+  font-size:9px;
+  letter-spacing:.3em;
+  color:var(--accent);
+}
+.home-theme h2{
+  margin:14px 0 0;
+  font:500 28px 'Shippori Mincho',serif;
+  letter-spacing:.08em;
+}
+.home-theme-word{
+  font:500 clamp(46px,6vw,78px) 'Shippori Mincho',serif;
+  letter-spacing:.12em;
+}
+.home-theme-action p{
+  margin:0 0 22px;
+  font:400 14px/2 'Shippori Mincho',serif;
+  color:#666;
+}
+.home-theme-action button{
+  border:0;
+  border-bottom:1px solid #222;
+  background:none;
+  padding:10px 0;
+  font:400 11px 'Shippori Mincho',serif;
+  letter-spacing:.16em;
+}
+.mobile-write-cta{
+  display:none;
+}
+@media(max-width:820px){
+  .editorial-letter h2{
+    font-size:clamp(30px,8vw,42px);
+    line-height:1.7;
+  }
+  .home-theme{
+    padding:0 24px 110px;
+  }
+  .home-theme-inner{
+    grid-template-columns:1fr;
+    gap:24px;
+    align-items:start;
+    padding:46px 0;
+  }
+  .home-theme-word{
+    font-size:54px;
+  }
+  .mobile-write-cta{
+    display:block;
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:120;
+    border:1px solid rgba(22,22,22,.2);
+    background:rgba(247,245,239,.92);
+    backdrop-filter:blur(12px);
+    padding:14px 18px;
+    box-shadow:0 12px 32px rgba(70,90,96,.14);
+    font:500 12px 'Shippori Mincho',serif;
+    letter-spacing:.13em;
+  }
+}
+
+
+/* ===== Ver.2 safe additions ===== */
+.detail-nav{flex-wrap:wrap}
+.detail-nav button{transition:.25s}
+.detail-nav button:hover{background:#171816;color:#fff}
+
+.bookmarks-section{max-width:1320px;margin:0 auto;padding:20px 7vw 130px}
+.bookmarks-head{display:flex;justify-content:space-between;align-items:end;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.bookmarks-head span{font-size:9px;letter-spacing:.3em;color:var(--accent)}
+.bookmarks-head h2{margin:12px 0 0;font:500 34px 'Shippori Mincho',serif;letter-spacing:.08em}
+.bookmarks-head button{border:0;border-bottom:1px solid #222;background:none;padding:8px 0;font:400 10px 'Shippori Mincho',serif;letter-spacing:.16em}
+.bookmarks-list{display:none}
+.bookmarks-list.open{display:block}
+.bookmark-item{display:grid;grid-template-columns:60px 1fr 130px;gap:22px;padding:38px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.bookmark-item p{margin:0;white-space:pre-line;font:500 24px/1.9 'Shippori Mincho',serif}
+.bookmark-item small{font-size:9px;letter-spacing:.16em;color:#777}
+
+.journey-room{min-height:100svh;display:grid;place-items:center;padding:120px 8vw 70px;position:relative;background:radial-gradient(circle at 50% 45%,rgba(212,225,222,.62),rgba(247,245,239,.78) 48%,#f5f4ef 82%)}
+.journey-close{position:absolute;top:105px;right:6vw;border:0;background:none;font-size:10px;letter-spacing:.2em}
+.journey-inner{width:min(920px,100%);text-align:center}
+.journey-kicker{font-size:9px;letter-spacing:.34em;color:var(--accent)}
+.journey-path{margin:38px 0 54px;font:400 13px 'Shippori Mincho',serif;letter-spacing:.25em;color:#75878a}
+.journey-poem{margin:0;white-space:pre-line;font:500 clamp(34px,5vw,66px)/1.9 'Shippori Mincho',serif;letter-spacing:.085em}
+.journey-meta{margin-top:42px;font-size:10px;letter-spacing:.18em;color:#777}
+.journey-actions{display:flex;justify-content:center;gap:16px;margin-top:58px}
+.journey-actions button{border:1px solid rgba(22,22,22,.18);background:rgba(255,255,255,.25);padding:14px 20px;font:400 11px 'Shippori Mincho',serif;letter-spacing:.14em}
+.bookmarked{color:var(--accent)!important}
+
+@media(max-width:820px){
+  .bookmarks-section{padding:0 24px 100px}
+  .bookmark-item{grid-template-columns:38px 1fr;gap:14px}
+  .bookmark-item small{grid-column:2}
+  .journey-room{padding:120px 24px 60px}
+  .journey-close{top:90px;right:24px}
+  .journey-actions{flex-direction:column;align-items:center}
+  .journey-actions button{width:210px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="splash-screen" id="splashScreen" aria-hidden="true">
+  <div class="splash-inner">
+    <div class="splash-logo">余白</div>
+    <div class="splash-roman">Y O H A K U</div>
+    <div class="splash-tagline">言葉を、静かに置く場所。</div><div class="splash-glow"></div>
+  </div>
+</div>
+
+<div class="success" id="success"><div><strong>ありがとうございます。</strong><p>あなたの言葉を、<br>お預かりしました。</p></div></div>
+
+<div class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><b>余白</b><span id="season">— 夏</span></div>
+  <nav class="nav">
+    <button data-page="home">読む</button>
+    <button onclick="drift()">漂う</button><button onclick="startJourney()">ことばの旅</button>
+    <button data-page="write">詠む</button>
+    <button class="editorial-nav" data-page="editorial">編集室より</button>
+  </nav>
+</div>
+
+<div class="app">
+<section class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="kicker">JAPANESE POETRY ARCHIVE</div>
+      <h1>余白</h1>
+      <div class="roman">Y O H A K U</div>
+      <div class="hero-text" id="heroQuote"></div>
+      <div class="hero-note">THIRTY-ONE SYLLABLES, ONE SILENCE.</div><div class="soft-line"></div>
+    </div>
+    <div class="hero-side">
+      <div class="glass">
+        <div class="vertical-poem" id="heroPoem"></div>
+        <div class="index">01</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="today-gallery reveal-museum" id="todayGallery">
+    <div class="today-gallery-head">
+      <div>
+        <span class="today-label">TODAY'S POEM</span>
+        <h2>今日の一首</h2>
+      </div>
+      <div class="today-date" id="todayDateLabel"></div>
+    </div>
+
+    <div class="today-stage" onclick="openTodayDetail()">
+      <div class="today-number">01</div>
+      <p class="today-poem" id="todayPoemText"></p>
+      <div class="today-plaque">
+        <span id="todayAuthorText">編集室</span>
+        <span id="todayMoodText">#はじまり</span>
+      </div>
+    </div>
+
+    <button class="today-open" type="button" onclick="openTodayDetail()">一首をひらく</button>
+  </section>
+
+  <section class="museum-intro reveal-museum">
+    <div class="museum-intro-inner">
+      <div class="museum-intro-label">THE FIRST ROOM</div>
+      <div class="museum-intro-copy">
+        一首を読むことは、<br>
+        誰かの時間に<br>
+        <span>静かに触れる</span>こと。
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal-museum">
+    <div class="counter">
+      <div><small>WORDS ARRIVED TODAY</small><strong>今日届いた言葉</strong></div>
+      <div class="number" id="todayCount">0<span>首</span></div>
+    </div>
+  </section>
+
+  <section class="section statement reveal-museum">
+    <small>ABOUT THE SPACE</small>
+    <p>
+      <span class="statement-line">ここは、</span>
+      <span class="statement-line nowrap">うまく言えなかった気持ちを、</span>
+      <span class="statement-line"><em>三十一音の余白</em>に</span>
+      <span class="statement-line">置くための場所。</span>
+    </p>
+  </section>
+
+  
+  <section class="home-theme reveal-museum">
+    <div class="home-theme-inner">
+      <div>
+        <span class="home-theme-kicker">THIS WEEK'S THEME</span>
+        <h2>今週のお題</h2>
+      </div>
+      <div class="home-theme-word" id="homeTheme">「窓」</div>
+      <div class="home-theme-action">
+        <p id="homeThemeNote">窓の向こうに見えたもの、窓越しに言えなかったこと。</p>
+        <button type="button" onclick="writeWithTheme()">このお題で詠む</button>
+      </div>
+    </div>
+  </section>
+
+<section class="bookmarks-section reveal-museum" id="bookmarksSection" style="display:none">
+    <div class="bookmarks-head">
+      <div><span>BOOKMARKS</span><h2>挟んだ栞</h2></div>
+      <button type="button" onclick="toggleBookmarks()">ひらく</button>
+    </div>
+    <div class="bookmarks-list" id="bookmarksList"></div>
+  </section>
+
+  <section class="section reveal-museum" id="archive">
+    <div class="archive-head"><h2>New Arrivals</h2><span id="vol"></span></div>
+    <div id="poemList"></div>
+  </section>
+
+  <section class="interlude reveal-museum">
+    <div>
+      <h3>探さないで、出会う。</h3>
+      <p>YOU MAY FIND A WORD YOU DIDN'T KNOW YOU NEEDED.</p>
+      <button class="round" onclick="drift()">漂う</button>
+    </div>
+  </section>
+</section>
+
+<section class="page" id="page-write">
+  <section class="section write-grid">
+    <div>
+      <h2>余白に置く。</h2>
+      <p>まだ誰にも読まれていない言葉を、<br class="mobile-break">そのまま、ここへ。</p>
+    </div>
+    <div class="write-theme">
+      <span>今週のお題</span>
+      <strong id="writeTheme">「窓」</strong>
+      <small>お題を使わずに詠んでも大丈夫です。</small>
+    </div>
+    <form class="form" id="poemForm">
+      <div class="field"><label>ことば</label><textarea id="poemInput" maxlength="180" placeholder="ここに短歌を書く"></textarea></div>
+      <div class="field"><label>書き手</label><input id="nameInput" maxlength="20" placeholder="匿名でも可"></div>
+      <div class="field"><label>気配</label><select id="moodInput"><option>恋</option><option>夜</option><option>生活</option><option>秘密</option><option>季節</option><option>その他</option></select></div>
+      <button class="publish">余白に置く。</button>
+    </form>
+  </section>
+</section>
+
+<section class="page" id="page-detail">
+  <section class="detail">
+    <div class="no" id="detailNo">01</div>
+    <div>
+      <div class="detail-poem" id="detailPoem"></div>
+      <div class="detail-nav">
+        <button onclick="moveDetail(-1)">← 前へ</button>
+        <button onclick="moveDetail(1)">次へ →</button>
+        <button onclick="showPage('home')">本を閉じる</button>
+        <button id="detailEchoButton" onclick="echoCurrentPoem()">共鳴する</button>
+        <button id="detailBookmarkButton" onclick="bookmarkCurrentPoem()">栞を挟む</button>
+        <button onclick="downloadCurrentCard()">短歌カード</button>
+      </div>
+      <div class="card-maker">
+        <div class="card-preview">
+          <small>余白 / YOH AKU</small>
+          <div class="cp" id="cardPoem"></div>
+          <small id="cardAuthor"></small>
+        </div>
+      </div>
+    </div>
+    <aside class="detail-side" id="detailMeta"></aside>
+  </section>
+</section>
+
+<section class="page" id="page-drift">
+  <section class="drift-room">
+    <button class="drift-close" type="button" onclick="showPage('home')">本を閉じる</button>
+    <div class="drift-room-inner">
+      <div class="drift-kicker">DRIFTING WORDS</div>
+      <p class="drift-poem" id="driftPoem"></p>
+      <div class="drift-author" id="driftAuthor"></div>
+      <button class="drift-next" type="button" onclick="driftAgain()">もう一首、漂う</button>
+    </div>
+  </section>
+</section>
+
+<section class="page" id="page-journey">
+  <section class="journey-room">
+    <button class="journey-close" type="button" onclick="showPage('home')">本を閉じる</button>
+    <div class="journey-inner">
+      <div class="journey-kicker">A JOURNEY THROUGH WORDS</div>
+      <div class="journey-path" id="journeyPath"></div>
+      <p class="journey-poem" id="journeyPoem"></p>
+      <div class="journey-meta" id="journeyMeta"></div>
+      <div class="journey-actions">
+        <button onclick="nextJourney()">次のことばへ</button>
+        <button onclick="openJourneyDetail()">この一首をひらく</button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<section class="page" id="page-author">
+  <section class="author-page">
+    <div class="author-count" id="authorCount"></div>
+    <h1 id="authorName"></h1>
+    <div class="author-list" id="authorWorks"></div>
+  </section>
+</section>
+
+<section class="page" id="page-editorial">
+  <section class="editorial-page">
+    <div class="editorial-hero">
+      <div class="kicker">FROM THE EDITORIAL ROOM</div>
+      <h1>編集室からの手紙</h1>
+      <div class="author-count" id="editorialDate"></div>
+    </div>
+
+    <article class="editorial-letter">
+      <div class="editorial-eyebrow">LETTER</div>
+      <h2 id="editorialTitle">
+        <span class="editorial-title-line">この場所は、</span>
+        <span class="editorial-title-line">まだ始まったばかりです。</span>
+      </h2>
+      <div class="letter" id="editorialBody">
+        うまく言えなかったことも、誰にも見せられなかった言葉も、ここでは急がなくて大丈夫です。<br><br>
+        あなたの一首を、静かにお待ちしています。
+      </div>
+    </article>
+
+    <section class="editorial-grid">
+      <div class="editorial-topic">
+        <div class="editorial-eyebrow">THIS WEEK'S THEME</div>
+        <span>今週のお題</span>
+        <strong id="editorialTheme">「窓」</strong>
+        <p id="editorialThemeNote">窓の向こうに見えたもの、窓越しに言えなかったこと。</p>
+        <button type="button" onclick="writeWithTheme()">このお題で詠む</button>
+      </div>
+
+      <div class="editorial-selection">
+        <div class="editorial-eyebrow">EDITOR'S SELECTION</div>
+        <span>編集室選</span>
+        <p id="selectedPoemText">まだ選ばれていません。</p>
+        <small id="selectedPoemAuthor">編集室</small>
+      </div>
+    </section>
+
+    <div class="editorial-closing" id="editorialClosing">
+      今日も、誰かの言葉が、<br>
+      誰かを少しだけ救っていますように。
+    </div>
+  </section>
+</section>
+</div>
+
+<button class="mobile-write-cta" type="button" onclick="showPage('write')">一首、詠む</button>
+<footer><span>© 2026 YOH AKU</span><span>また、言葉を置きに来てください。</span></footer>
+
+
+<script>
+const SUPABASE_URL="https://bzgoalrhazqxugiesgqp.supabase.co";
+const SUPABASE_KEY="sb_publishable_JMCOs1W_r_BqSoVJ5__HdA_G24_ugrJ";
+const API=SUPABASE_URL+"/rest/v1/poems";
+
+const EDITORIAL_API = SUPABASE_URL + "/rest/v1/editorial_settings";
+
+let editorialSettings = {
+  title:"この場所は、まだ始まったばかりです。",
+  body:"うまく言えなかったことも、誰にも見せられなかった言葉も、ここでは急がなくて大丈夫です。\n\nあなたの一首を、静かにお待ちしています。",
+  weekly_theme:"窓",
+  theme_note:"窓の向こうに見えたもの、窓越しに言えなかったこと。",
+  selected_poem_id:null,
+  closing_message:"今日も、誰かの言葉が、\n誰かを少しだけ救っていますように。"
+};
+
+async function loadEditorialSettings(){
+  try{
+    const response = await fetch(
+      EDITORIAL_API + "?select=*&order=updated_at.desc&limit=1",
+      {headers:headers()}
+    );
+    if(!response.ok) return;
+    const rows = await response.json();
+    if(rows.length) editorialSettings = {...editorialSettings,...rows[0]};
+    renderEditorialSettings();
+  }catch(error){
+    console.error("編集室データを読み込めませんでした", error);
+  }
+}
+
+function renderEditorialSettings(){
+  const titleEl = document.getElementById("editorialTitle");
+  const parts = editorialSettings.title.split("、");
+  if(parts.length > 1){
+    titleEl.innerHTML =
+      '<span class="editorial-title-line">' + esc(parts[0] + "、") + '</span>' +
+      '<span class="editorial-title-line">' + esc(parts.slice(1).join("、")) + '</span>';
+  }else{
+    titleEl.innerHTML = '<span class="editorial-title-line">' + esc(editorialSettings.title) + '</span>';
+  }
+  document.getElementById("editorialBody").innerHTML =
+    esc(editorialSettings.body).replace(/\n/g,"<br>");
+  document.getElementById("editorialTheme").textContent =
+    "「" + editorialSettings.weekly_theme + "」";
+  document.getElementById("writeTheme").textContent =
+    "「" + editorialSettings.weekly_theme + "」";
+  document.getElementById("homeTheme").textContent =
+    "「" + editorialSettings.weekly_theme + "」";
+  document.getElementById("editorialThemeNote").textContent =
+    editorialSettings.theme_note;
+  document.getElementById("homeThemeNote").textContent =
+    editorialSettings.theme_note;
+  document.getElementById("editorialClosing").innerHTML =
+    esc(editorialSettings.closing_message).replace(/\n/g,"<br>");
+
+  const selected = userPoems.find(
+    poem => String(poem.id) === String(editorialSettings.selected_poem_id)
+  );
+  if(selected){
+    document.getElementById("selectedPoemText").textContent = selected.poem;
+    document.getElementById("selectedPoemAuthor").textContent = "— " + selected.author;
+  }else{
+    document.getElementById("selectedPoemText").textContent = "まだ選ばれていません。";
+    document.getElementById("selectedPoemAuthor").textContent = "編集室";
+  }
+}
+
+function writeWithTheme(){
+  showPage("write");
+  setTimeout(()=>document.getElementById("poemInput").focus(),350);
+}
+
+
+const BOOKMARK_KEY = "yohaku-bookmarks-v2";
+let bookmarks = JSON.parse(localStorage.getItem(BOOKMARK_KEY) || "[]");
+let journeyCurrentIndex = 0;
+let journeyHistory = [];
+
+async function callEchoRpc(poemId){
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/rpc/increment_poem_echo",
+    {
+      method:"POST",
+      headers:headers({"Content-Type":"application/json"}),
+      body:JSON.stringify({poem_id_input:Number(poemId)})
+    }
+  );
+  if(!response.ok) throw new Error(await response.text());
+}
+
+async function echoCurrentPoem(){
+  const poem=poems[currentDetail];
+  if(!poem || poem.editorial){
+    notice("編集室の一首には、まだ共鳴できません。");
+    return;
+  }
+  try{
+    await callEchoRpc(poem.id);
+    await loadPoems(false);
+    notice("あなたの気持ちが、この一首に重なりました。");
+    updateDetailButtons();
+  }catch(error){
+    console.error(error);
+    notice("共鳴を残せませんでした。");
+  }
+}
+
+function bookmarkCurrentPoem(){
+  const poem=poems[currentDetail];
+  if(!poem || poem.editorial){
+    notice("編集室の一首には栞を挟めません。");
+    return;
+  }
+  const id=String(poem.id);
+  if(bookmarks.includes(id)){
+    bookmarks=bookmarks.filter(item=>item!==id);
+    notice("栞を外しました。");
+  }else{
+    bookmarks.unshift(id);
+    notice("また読めるよう、栞を挟みました。");
+  }
+  localStorage.setItem(BOOKMARK_KEY,JSON.stringify(bookmarks));
+  renderBookmarks();
+  updateDetailButtons();
+}
+
+function renderBookmarks(){
+  const section=document.getElementById("bookmarksSection");
+  const list=document.getElementById("bookmarksList");
+  if(!section || !list) return;
+  const works=userPoems.filter(p=>bookmarks.includes(String(p.id)));
+  section.style.display=works.length ? "block" : "none";
+  list.innerHTML=works.map((p,i)=>{
+    const index=poems.findIndex(x=>String(x.id)===String(p.id));
+    return `<article class="bookmark-item" onclick="openDetail(${index})">
+      <div class="no">${String(i+1).padStart(2,"0")}</div>
+      <p>${esc(p.poem)}</p>
+      <small>— ${esc(p.author)}</small>
+    </article>`;
+  }).join("");
+}
+
+function toggleBookmarks(){
+  document.getElementById("bookmarksList").classList.toggle("open");
+}
+
+function updateDetailButtons(){
+  const poem=poems[currentDetail];
+  const echoBtn=document.getElementById("detailEchoButton");
+  const bookmarkBtn=document.getElementById("detailBookmarkButton");
+  if(!poem || !echoBtn || !bookmarkBtn) return;
+  echoBtn.textContent=poem.echoes ? `共鳴する　${poem.echoes}` : "共鳴する";
+  const marked=bookmarks.includes(String(poem.id));
+  bookmarkBtn.textContent=marked ? "栞を外す" : "栞を挟む";
+  bookmarkBtn.classList.toggle("bookmarked",marked);
+}
+
+function downloadCurrentCard(){
+  const poem=poems[currentDetail];
+  if(!poem)return;
+  const canvas=document.createElement("canvas");
+  canvas.width=1080; canvas.height=1350;
+  const ctx=canvas.getContext("2d");
+  ctx.fillStyle="#f7f5ef"; ctx.fillRect(0,0,1080,1350);
+  ctx.fillStyle="#171816"; ctx.font='500 52px serif'; ctx.fillText("余白",90,110);
+  ctx.fillStyle="#7d9da8"; ctx.font='400 20px serif'; ctx.fillText("Y O H A K U",90,150);
+  ctx.fillStyle="#171816"; ctx.font='500 48px serif';
+  let y=360;
+  for(const line of poem.poem.split("\n")){ctx.fillText(line,150,y);y+=105}
+  ctx.fillStyle="#666"; ctx.font='400 24px serif'; ctx.fillText("— "+poem.author,150,1160);
+  ctx.fillStyle="#7d9da8"; ctx.font='400 18px sans-serif'; ctx.fillText("言葉を、静かに置く場所。",150,1220);
+  const link=document.createElement("a");
+  link.download=`yohaku-${poem.id}.png`;
+  link.href=canvas.toDataURL("image/png");
+  link.click();
+}
+
+function startJourney(){
+  journeyHistory=[];
+  nextJourney();
+  showPage("journey");
+}
+
+function nextJourney(){
+  const pool=userPoems.length ? userPoems : poems;
+  if(!pool.length)return;
+  const poem=pool[Math.floor(Math.random()*pool.length)];
+  journeyCurrentIndex=poems.findIndex(p=>String(p.id)===String(poem.id));
+  journeyHistory.push(poem.mood||"その他");
+  if(journeyHistory.length>5)journeyHistory.shift();
+  document.getElementById("journeyPath").textContent=journeyHistory.join("　→　");
+  document.getElementById("journeyPoem").textContent=poem.poem;
+  document.getElementById("journeyMeta").textContent="— "+poem.author+"　#"+(poem.mood||"その他");
+}
+
+function openJourneyDetail(){
+  if(journeyCurrentIndex>=0)openDetail(journeyCurrentIndex);
+}
+
+
+const editorial={
+  id:"editorial-001",
+  poem:`ようこそ
+ここはまだ
+始まったばかり
+最初の言葉を
+待っています`,
+  author:"編集室",
+  mood:"はじまり",
+  echoes:0,
+  created_at:new Date().toISOString(),
+  editorial:true
+};
+let userPoems=[],poems=[editorial],currentDetail=0,loading=false;
+const quotes=[
+  `今日も、誰かが
+言葉を置いていった。`,
+  `急がなくて、大丈夫です。
+言葉はここで待っています。`,
+  `あなたの言えなかったことは、
+誰かの言いたかったことかもしれない。`,
+  `今日は、どんな言葉に
+出会えるでしょう。`
+];
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const headers=(extra={})=>({"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,...extra});
+function season(){const m=new Date().getMonth()+1;return m<=2||m===12?"— 冬":m<=5?"— 春":m<=8?"— 夏":"— 秋"}
+document.getElementById("season").textContent=season();
+document.getElementById("heroQuote").innerHTML=quotes[Math.floor(Math.random()*quotes.length)].replace(/\n/g,"<br>");
+document.getElementById("vol").textContent=new Intl.DateTimeFormat("ja-JP",{year:"numeric",month:"2-digit"}).format(new Date())+" / VOL.01";
+document.getElementById("editorialDate").textContent=new Intl.DateTimeFormat("ja-JP",{year:"numeric",month:"long",day:"numeric"}).format(new Date());
+function poeticTime(s){const d=new Date(s),min=Math.floor((Date.now()-d)/60000);if(min<1)return"たった今";if(min<60)return"今日 "+d.toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});if(min<1440){const h=d.getHours();return h<5?"今日の夜更け":h<10?"今朝":h<17?"今日の午後":h<21?"今日の夕方":"今夜"}if(min<2880)return"昨日";return new Intl.DateTimeFormat("ja-JP",{month:"long",day:"numeric"}).format(d)}
+function isToday(s){const d=new Date(s),n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate()}
+function showPage(name){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("page-"+name).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+async function loadPoems(showLoader=false){
+ if(loading)return;loading=true;
+ 
+ try{
+  const r=await fetch(API+"?select=id,created_at,author,poem,mood,echoes&order=created_at.desc",{headers:headers()});
+  if(!r.ok)throw new Error(await r.text());
+  userPoems=await r.json();render();renderEditorialSettings();renderBookmarks();
+ }catch(e){console.error(e);notice("作品の表示中に問題が起きました。ページを再読み込みしてください。")}
+ finally{loading=false;void 0}
+}
+
+document.getElementById("todayDateLabel").textContent =
+  new Intl.DateTimeFormat("ja-JP",{year:"numeric",month:"long",day:"numeric"}).format(new Date());
+
+function openTodayDetail(){
+  const selected = userPoems[0] || editorial;
+  const index = poems.findIndex(p => p.id === selected.id);
+  openDetail(index >= 0 ? index : 0);
+}
+
+function render(){
+ poems=[editorial,...userPoems];
+ document.getElementById("todayCount").innerHTML=userPoems.filter(p=>isToday(p.created_at)).length+"<span>首</span>";
+ const hero=userPoems[0]||editorial;
+document.getElementById("heroPoem").innerHTML=esc(hero.poem).replace(/\n/g,"<br>");
+document.getElementById("todayPoemText").textContent=hero.poem;
+document.getElementById("todayAuthorText").textContent=hero.author;
+document.getElementById("todayMoodText").textContent="#" + (hero.mood || "その他");
+ const list=document.getElementById("poemList");
+ if(!userPoems.length){
+  list.innerHTML=`<article class="poem-row"><div class="no">01</div><p class="poem-text">${esc(editorial.poem)}</p><div class="meta"><span>BY 編集室</span><span>#はじまり</span><span>この場所は、まだ始まったばかりです。</span><span>まだ誰にも共鳴されていません。</span></div></article><div class="empty"><strong>まだ、この場所は静かです。</strong><p>あなたの一首が、最初に届く言葉になるかもしれません。</p><button class="outline" onclick="showPage('write')">余白に置く</button></div>`;
+ }else{
+  list.innerHTML=poems.map((p,i)=>`<article class="poem-row"><div class="no">${String(i+1).padStart(2,"0")}</div><p class="poem-text" onclick="openDetail(${i})">${esc(p.poem)}</p><div class="meta"><button onclick="openAuthor('${esc(p.author)}')">BY ${esc(p.author)}</button><span>#${esc(p.mood||"その他")}</span><span>${p.editorial?"編集室より":poeticTime(p.created_at)}</span><span>${p.echoes?`${p.echoes}人が共鳴しました。`:"まだ誰にも共鳴されていません。"}</span></div></article>`).join("");
+ }
+}
+function openDetail(i){currentDetail=i;const p=poems[i];document.getElementById("detailNo").textContent=String(i+1).padStart(2,"0");document.getElementById("detailPoem").textContent=p.poem;document.getElementById("cardPoem").textContent=p.poem;document.getElementById("cardAuthor").textContent=p.author;document.getElementById("detailMeta").innerHTML=`BY ${esc(p.author)}<br>#${esc(p.mood||"その他")}<br>${p.editorial?"編集室より":poeticTime(p.created_at)}<br><br>${p.echoes?`${p.echoes}人が共鳴しました。`:"まだ誰にも共鳴されていません。"}`;updateDetailButtons();showPage("detail")}
+function moveDetail(d){currentDetail=(currentDetail+d+poems.length)%poems.length;openDetail(currentDetail)}
+function openAuthor(name){const works=poems.filter(p=>p.author===name);document.getElementById("authorName").textContent=name;const moods=[...new Set(works.map(p=>p.mood).filter(Boolean))];
+document.getElementById("authorCount").textContent=`作品 ${works.length}首`+(moods.length?`　気配 ${moods.slice(0,3).join("・")}`:"");document.getElementById("authorWorks").innerHTML=works.map((p,i)=>`<article class="poem-row"><div class="no">${String(i+1).padStart(2,"0")}</div><p class="poem-text">${esc(p.poem)}</p><div class="meta"><span>#${esc(p.mood||"その他")}</span></div></article>`).join("");showPage("author")}
+function drift(){
+  driftAgain();
+  showPage("drift");
+}
+
+function driftAgain(){
+  if(!poems.length) return;
+  const pool = userPoems.length ? userPoems : poems;
+  const poem = pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById("driftPoem").textContent = poem.poem;
+  document.getElementById("driftAuthor").textContent =
+    poem.editorial ? "編集室より" : "— " + poem.author;
+  const room = document.querySelector(".drift-room-inner");
+  if(room){
+    room.animate(
+      [{opacity:.25,transform:"translateY(10px)"},{opacity:1,transform:"none"}],
+      {duration:700,easing:"ease"}
+    );
+  }
+}
+function notice(msg){const s=document.getElementById("success");s.querySelector("strong").textContent="お知らせ";s.querySelector("p").innerHTML=esc(msg).replace(/\n/g,"<br>");s.classList.add("show");setTimeout(()=>s.classList.remove("show"),2600)}
+document.getElementById("poemForm").onsubmit=async e=>{
+ e.preventDefault();const btn=e.target.querySelector(".publish");const poem=document.getElementById("poemInput").value.trim();if(!poem)return document.getElementById("poemInput").focus();
+ btn.disabled=true;btn.textContent="お預かりしています…";
+ try{
+  const r=await fetch(API,{method:"POST",headers:headers({"Content-Type":"application/json","Prefer":"return=representation"}),body:JSON.stringify({poem,author:document.getElementById("nameInput").value.trim()||"匿名",mood:document.getElementById("moodInput").value,echoes:0})});
+  if(!r.ok)throw new Error(await r.text());
+  e.target.reset();const s=document.getElementById("success");s.querySelector("strong").textContent="ありがとうございます。";s.querySelector("p").innerHTML="あなたの言葉を、<br>お預かりしました。";s.classList.add("show");await loadPoems(false);setTimeout(()=>{s.classList.remove("show");showPage("home")},1500);
+ }catch(err){console.error(err);notice("投稿できませんでした。RLS設定と入力内容を確認してください。")}
+ finally{btn.disabled=false;btn.textContent="余白に置く。"}
+};
+window.addEventListener("focus",()=>loadPoems(false));
+setInterval(()=>loadPoems(false),30000);
+loadPoems(true);
+loadEditorialSettings();
+if("serviceWorker" in navigator){
+  window.addEventListener("load",async()=>{
+    const regs=await navigator.serviceWorker.getRegistrations();
+    for(const reg of regs) await reg.unregister();
+  });
+}
+
+const museumObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting) entry.target.classList.add("visible");
+  });
+},{threshold:.12});
+document.querySelectorAll(".reveal-museum").forEach(el=>museumObserver.observe(el));
+
+const currentHour=new Date().getHours();
+if(currentHour>=22 || currentHour<5) document.body.classList.add("night");
+
+window.addEventListener("pointermove",e=>{
+  const glass=document.querySelector(".glass");
+  if(!glass || window.innerWidth<821) return;
+  const x=(e.clientX/window.innerWidth-.5)*8;
+  const y=(e.clientY/window.innerHeight-.5)*8;
+  glass.style.transform=`rotate(2.5deg) translate(${x}px,${y}px)`;
+});
+
+
+setTimeout(()=>{
+  const splash=document.getElementById("splashScreen");
+  if(splash) splash.remove();
+},3300);
+
+</script>
+
+</body>
+</html>
